@@ -45,6 +45,21 @@ namespace Dsw2026Ej15.Api.Controllers
             return Ok(activeDoctorsResponse);
 
         }
+
+        [HttpGet("{id}")]
+
+        public async Task<IActionResult> GetDoctorById(Guid id)
+        {
+            var doctor = _persistence.GetDoctor(id);
+            if(doctor is null)
+            {
+                return NotFound("El medico solicitado no existe o no esta activo.");
+            }
+            var response = new DoctorModel.Response(doctor.Id, doctor.Name,
+                doctor.LicenseNumber, doctor.Speciality?.Name ?? "Sin especialidad");
+            
+            return Ok(response);
+        }
         
     }
 }
