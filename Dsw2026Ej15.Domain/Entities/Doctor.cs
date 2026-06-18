@@ -11,7 +11,7 @@ public class Doctor : BaseEntity
     public bool IsActive { get; set; }
     public Speciality Speciality { get; private set; }
 
-    public Doctor(string name, string licenseNumber, bool isActive, Speciality speciality, Guid? id = null): base(id)
+    public Doctor(string name, string licenseNumber, bool isActive, Speciality speciality, Guid id) : base(id)
     {
         Name = name;
         LicenseNumber = licenseNumber;
