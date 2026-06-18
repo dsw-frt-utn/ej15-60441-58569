@@ -24,17 +24,17 @@ public class PersistenceInMemory : IPersistence
 
     public Doctor? GetDoctor(Guid doctorId)
     {
-        return _doctors.FirstOrDefault(d => d.id == doctorId);
+        return _doctors.FirstOrDefault(d => d.Id == doctorId);
     }
 
     public Speciality? GetSpecialityById(Guid id)
     {
-        return _specialities.FirstOrDefault(s => s.id == id);
+        return _specialities.SingleOrDefault(s => s.Id == id);
     }
 
     public void UpdateDoctor(Guid doctorId)
     {
-        var encontrado = _doctors.FirstOrDefault(d => d.id == doctorId);
+        var encontrado = _doctors.FirstOrDefault(d => d.Id == doctorId);
         encontrado.IsActive = false;    
     }
     private void LoadSpecialities()
