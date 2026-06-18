@@ -2,8 +2,8 @@
 
 public class Speciality : BaseEntity
 {
-    string Name { get; init; }
-    string Description { get; init; }
+    public string Name { get; init; }
+    public string Description { get; init; }
 
     public Speciality (string name, string description, Guid? id = null ) : base(id)
     {

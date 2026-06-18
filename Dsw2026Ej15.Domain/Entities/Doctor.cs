@@ -8,8 +8,8 @@ public class Doctor : BaseEntity
 {
     private Speciality speciality;
 
-    string Name { get; init; }
-    string LicenseNumber { get; init; }
+    public string Name { get; init; }
+    public string LicenseNumber { get; init; }
     public bool IsActive { get; set; }
     public Speciality? Speciality { get; private set; }
 

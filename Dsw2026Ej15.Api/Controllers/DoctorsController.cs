@@ -33,6 +33,18 @@ namespace Dsw2026Ej15.Api.Controllers
 
             return Created();
         }
+
+        [HttpGet]
+
+        public async Task<IActionResult> GetActivedDoctors()
+        {
+            var doctors = _persistence.GetAllDoctors();
+            var activeDoctorsResponse = doctors.Where(d => d.IsActive).Select(d => new DoctorModel.Response(d.Id, d.Name,
+                d.LicenseNumber, d.Speciality?.Name ?? "Sin especialidad")).ToList();
+
+            return Ok(activeDoctorsResponse);
+
+        }
         
     }
 }
