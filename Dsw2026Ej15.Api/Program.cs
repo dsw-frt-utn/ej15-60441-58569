@@ -1,3 +1,7 @@
+using Dsw2026Ej15.Domain;
+using Dsw2026Ej15.Data;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Dsw2026Ej15.Domain.Interfaces;
 
 namespace Dsw2026Ej15.Api
 {
@@ -14,7 +18,7 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddOpenApi();
 
             var app = builder.Build();
-
+            builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

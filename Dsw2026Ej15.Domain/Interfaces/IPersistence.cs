@@ -11,6 +11,7 @@ public interface IPersistence
     Speciality? GetSpecialityById(Guid id);
     List<Doctor> GetAllDoctors();
     Doctor? GetDoctor(Guid doctorId);
-    Doctor SetDoctor(Doctor doctor);
-    void DeleteDoctor(Guid id);
+    void UpdateDoctor(Guid doctorId);
+
+
 }

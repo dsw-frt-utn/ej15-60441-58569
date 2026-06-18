@@ -15,35 +15,40 @@ public class PersistenceInMemory : IPersistence
     }
     public void AddDoctor(Doctor doctor)
     {
-        throw new NotImplementedException();
+        _doctors.Add(doctor);
     }
-
-    public void DeleteDoctor(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
     public List<Doctor> GetAllDoctors()
     {
-        throw new NotImplementedException();
+        return _doctors;
     }
 
     public Doctor? GetDoctor(Guid doctorId)
     {
-        throw new NotImplementedException();
+        return _doctors.FirstOrDefault(d => d.id == doctorId);
     }
 
     public Speciality? GetSpecialityById(Guid id)
     {
-        throw new NotImplementedException();
+        return _specialities.FirstOrDefault(s => s.id == id);
     }
 
-    public Doctor SetDoctor(Doctor doctor)
+    public void UpdateDoctor(Guid doctorId)
     {
-        throw new NotImplementedException();
+        var encontrado = _doctors.FirstOrDefault(d => d.id == doctorId);
+        encontrado.IsActive = false;    
     }
     private void LoadSpecialities()
     {
-        
+        try
+        {
+            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", "specialities.json");
+            var json = File.ReadAllText(jsonPath);
+            var specialities = JsonSerializer.Deserialize<List<SpecialityDto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
+            _specialities = [.. specialities.Select(s => new Speciality(s.Name, s.Description, s.Id))];
+        }
+        catch (Exception ex)
+        {
+
+        }
     }
 }
