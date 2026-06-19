@@ -60,6 +60,26 @@ namespace Dsw2026Ej15.Api.Controllers
             
             return Ok(response);
         }
+
+        [HttpDelete("{id}")]
+
+        public async Task<IActionResult> UpdateDoctor(Guid id)
+        {
+            var doctor = _persistence.GetDoctor(id);
+
+            if(doctor is null || !doctor.IsActive)
+            {
+                return NotFound("El medico solicitado no existe o no esta activo. ");
+            }
+
+            _persistence.UpdateDoctor(id);
+
+            return NoContent();
+
+        }
+
+
+
         
     }
 }

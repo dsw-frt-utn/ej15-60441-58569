@@ -2,6 +2,7 @@ using Dsw2026Ej15.Domain;
 using Dsw2026Ej15.Data;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Dsw2026Ej15.Domain.Interfaces;
+using Dsw2026Ej15.Api.Middlewares;
 
 namespace Dsw2026Ej15.Api
 {
@@ -28,10 +29,14 @@ namespace Dsw2026Ej15.Api
                 app.UseSwaggerUI();
             }
 
+
+            app.UseMiddleware<ExceptionMiddleware>();
+            
             app.UseAuthorization();
-
-
+            
             app.MapControllers();
+
+            app.MapHealthChecks("/health-check");
 
             app.Run();
         }
