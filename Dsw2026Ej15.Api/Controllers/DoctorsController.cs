@@ -21,12 +21,12 @@ namespace Dsw2026Ej15.Api.Controllers
         {
             if(string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.LicenseNumber))
             {
-                return BadRequest("Nombre y matricula son requeridas.");
+                throw new ValidationException("Nombre y matricula son requeridas.");
             }
             var speciality = _persistence.GetSpecialityById(request.SpecialityId);
             if(speciality is null)
             {
-                return BadRequest("Especialidad no existe");
+                throw new ValidationException("Especialidad no existe");
             }
             var doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
             _persistence.AddDoctor(doctor);
@@ -53,7 +53,7 @@ namespace Dsw2026Ej15.Api.Controllers
             var doctor = _persistence.GetDoctor(id);
             if(doctor is null)
             {
-                return NotFound("El medico solicitado no existe o no esta activo.");
+                throw new ValidationException("El medico solicitado no existe o no esta activo.");
             }
             var response = new DoctorModel.Response(doctor.Id, doctor.Name,
                 doctor.LicenseNumber, doctor.Speciality?.Name ?? "Sin especialidad");
@@ -69,7 +69,7 @@ namespace Dsw2026Ej15.Api.Controllers
 
             if(doctor is null || !doctor.IsActive)
             {
-                return NotFound("El medico solicitado no existe o no esta activo. ");
+                throw new ValidationException("El medico solicitado no existe o no esta activo. ");
             }
 
             _persistence.UpdateDoctor(id);
