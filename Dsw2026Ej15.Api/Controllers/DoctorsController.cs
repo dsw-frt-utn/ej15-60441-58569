@@ -23,13 +23,13 @@ namespace Dsw2026Ej15.Api.Controllers
             {
                 throw new ValidationException("Nombre y matricula son requeridas.");
             }
-            var speciality = _persistence.GetSpecialityById(request.SpecialityId);
+            var speciality = await _persistence.GetSpecialityById(request.SpecialityId);
             if(speciality is null)
             {
                 throw new ValidationException("Especialidad no existe");
             }
             var doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
-            _persistence.AddDoctor(doctor);
+            await _persistence.AddDoctor(doctor);
 
             return Created();
         }
@@ -38,7 +38,7 @@ namespace Dsw2026Ej15.Api.Controllers
 
         public async Task<IActionResult> GetActivedDoctors()
         {
-            var doctors = _persistence.GetAllDoctors();
+            var doctors = await _persistence.GetAllDoctors();
             var activeDoctorsResponse = doctors.Where(d => d.IsActive).Select(d => new DoctorModel.Response(d.Id, d.Name,
                 d.LicenseNumber, d.Speciality?.Name ?? "Sin especialidad")).ToList();
 
@@ -50,13 +50,9 @@ namespace Dsw2026Ej15.Api.Controllers
 
         public async Task<IActionResult> GetDoctorById(Guid id)
         {
-            var doctor = _persistence.GetDoctor(id);
-            if(doctor is null)
-            {
-                throw new ValidationException("El medico solicitado no existe o no esta activo.");
-            }
+            var doctor = (await GetDoctor(id))!;
             var response = new DoctorModel.Response(doctor.Id, doctor.Name,
-                doctor.LicenseNumber, doctor.Speciality?.Name ?? "Sin especialidad");
+                doctor.LicenseNumber, doctor.Speciality?.Name);
             
             return Ok(response);
         }
@@ -65,19 +61,17 @@ namespace Dsw2026Ej15.Api.Controllers
 
         public async Task<IActionResult> UpdateDoctor(Guid id)
         {
-            var doctor = _persistence.GetDoctor(id);
-
-            if(doctor is null || !doctor.IsActive)
-            {
-                throw new ValidationException("El medico solicitado no existe o no esta activo. ");
-            }
-
-            _persistence.UpdateDoctor(id);
-
+            var doctor = (await GetDoctor(id))!;
+            doctor.Deactive();
+            await _persistence.UpdateDoctor(doctor);
             return NoContent();
 
         }
 
+        private async Task<Doctor?> GetDoctor(Guid id)
+        { 
+            return await _persistence.GetDoctor(id) ?? throw new EntityNotFoundException("El medico solicitado no existe o no esta activo. ");
+        }
 
 
         

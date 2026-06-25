@@ -13,29 +13,29 @@ public class PersistenceInMemory : IPersistence
     {
         LoadSpecialities();
     }
-    public void AddDoctor(Doctor doctor)
+    public async Task AddDoctor(Doctor doctor)
     {
         _doctors.Add(doctor);
     }
-    public List<Doctor> GetAllDoctors()
+    public async Task<IEnumerable<Doctor>> GetAllDoctors()
     {
         return _doctors;
     }
 
-    public Doctor? GetDoctor(Guid doctorId)
+    public async Task<Doctor?> GetDoctor(Guid doctorId)
     {
         return _doctors.FirstOrDefault(d => d.Id == doctorId);
     }
 
-    public Speciality? GetSpecialityById(Guid id)
+    public async Task<Speciality?> GetSpecialityById(Guid id)
     {
         return _specialities.SingleOrDefault(s => s.Id == id);
     }
 
-    public void UpdateDoctor(Guid doctorId)
+    public async Task UpdateDoctor(Doctor doctor)
     {
-        var encontrado = _doctors.FirstOrDefault(d => d.Id == doctorId);
-        encontrado.IsActive = false;    
+        _doctors.Remove(doctor);
+        _doctors.Add(doctor);
     }
     private void LoadSpecialities()
     {
