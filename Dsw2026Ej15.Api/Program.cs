@@ -23,7 +23,7 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddHealthChecks();
-            builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
+            builder.Services.AddScoped<IPersistence, PersistenceEF>();
 
             var app = builder.Build();
             

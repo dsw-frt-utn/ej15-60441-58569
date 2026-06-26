@@ -40,7 +40,7 @@ namespace Dsw2026Ej15.Api.Controllers
         {
             var doctors = await _persistence.GetAllDoctors();
             var activeDoctorsResponse = doctors.Where(d => d.IsActive).Select(d => new DoctorModel.Response(d.Id, d.Name,
-                d.LicenseNumber, d.Speciality?.Name ?? "Sin especialidad")).ToList();
+                d.LicenseNumber, d.Speciality?.Name)).ToList();
 
             return Ok(activeDoctorsResponse);
 

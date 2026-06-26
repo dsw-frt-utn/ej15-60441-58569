@@ -1,9 +1,13 @@
-﻿using Dsw2026Ej15.Data.Migrations;
+﻿using Dsw2026Ej15.Data.Dtos;
+using Dsw2026Ej15.Data.Migrations;
 using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
+using System.Text.Json;
 
 namespace Dsw2026Ej15.Data;
 
@@ -13,29 +17,55 @@ public class PersistenceEF : IPersistence
     public PersistenceEF(Dsw2026Ej15DbContext context)
     {
         _context = context;
+        LoadSpecialities();
     }
-    public Task AddDoctor(Doctor doctor)
+    public async Task AddDoctor(Doctor doctor)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Doctor>> GetAllDoctors()
-    {
-        throw new NotImplementedException();
+        _context.Add(doctor);
+        await _context.SaveChangesAsync();
     }
 
-    public Task<Doctor?> GetDoctor(Guid doctorId)
+    public async Task<IEnumerable<Doctor>> GetAllDoctors()
     {
-        throw new NotImplementedException();
+        return _context.Doctors.Include(d => d.Speciality).Where(d => d.IsActive);
     }
 
-    public Task<Speciality?> GetSpecialityById(Guid id)
+    public async Task<Doctor?> GetDoctor(Guid doctorId)
     {
-        throw new NotImplementedException();
+        return await _context.Doctors.Include(d => d.Speciality).FirstOrDefaultAsync(d => d.Id == doctorId && d.IsActive);
     }
 
-    public Task UpdateDoctor(Doctor doctor)
+    public async Task<Speciality?> GetSpecialityById(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context.Specialities.FirstOrDefaultAsync(s => s.Id == id);
+    }
+
+    public async Task UpdateDoctor(Doctor doctor)
+    {
+        _context.Doctors.Update(doctor);
+        await _context.SaveChangesAsync();
+    }
+    private void LoadSpecialities()
+    {
+
+        try
+        {
+            if (!_context.Specialities.Any())
+            {
+                string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", "specialities.json");
+                var json = File.ReadAllText(jsonPath);
+                var specialitiesDto = JsonSerializer.Deserialize<List<SpecialityDto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
+                var specialities = specialitiesDto.Select(s => new Speciality(s.Name, s.Description, s.Id)).ToList();
+                _context.Specialities.AddRange(specialities);
+                _context.SaveChanges();
+            }
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        
+        
     }
 }
