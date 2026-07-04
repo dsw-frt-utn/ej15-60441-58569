@@ -10,8 +10,17 @@ public class Doctor : BaseEntity
 
     public string Name { get; init; }
     public string LicenseNumber { get; init; }
+
+    public string? Email { get; private set; }
     public bool IsActive { get; set; }
+    public Guid? SpecialityId { get; set; }
     public Speciality? Speciality { get; private set; }
+
+    private Doctor()
+    {
+
+    }
+
 
     public Doctor(string name, string licenseNumber, Speciality? speciality, Guid? id = null) : base(id)
     {
@@ -19,6 +28,11 @@ public class Doctor : BaseEntity
         LicenseNumber = licenseNumber;
         IsActive = true;
         Speciality = speciality;
+    }
+
+    public void Deactive()
+    {
+        IsActive = false;
     }
 
 

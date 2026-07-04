@@ -3,15 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dsw2026Ej15.Domain.Interfaces;
-
-public interface IPersistence
+namespace Dsw2026Ej15.Domain.Interfaces
 {
-    void AddDoctor(Doctor doctor);
-    Speciality? GetSpecialityById(Guid id);
-    List<Doctor> GetAllDoctors();
-    Doctor? GetDoctor(Guid doctorId);
-    void UpdateDoctor(Guid doctorId);
-
-
+    public interface IPersistence
+    {
+        Task AddDoctor(Doctor doctor);
+        Task<Speciality?> GetSpecialityById(Guid id);
+        Task<IEnumerable<Doctor>> GetAllDoctors();
+        Task<Doctor?> GetDoctor(Guid doctorId);
+        Task UpdateDoctor(Doctor doctor);
+    }
 }
